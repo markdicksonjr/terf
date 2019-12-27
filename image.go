@@ -31,7 +31,7 @@ import (
 	"strconv"
 	"strings"
 
-	protobuf "github.com/ubccr/terf/protobuf"
+	protobuf "github.com/markdicksonjr/terf/protobuf"
 
 	_ "image/gif"
 	_ "image/png"
@@ -112,7 +112,7 @@ func BytesFeature(val []byte) *protobuf.Feature {
 
 // ExampleFeatureInt64 is a helper function for decoding proto Int64 feature
 // from a TensorFlow Example. If key is not found it returns default value
-func ExampleFeatureInt64(example *protobuf.Example, key string) int {
+func ExampleFeatureInt64(example *protobuf.Example, key string) int64 {
 	// TODO: return error if key is not found?
 	f, ok := example.Features.Feature[key]
 	if !ok {
@@ -124,7 +124,24 @@ func ExampleFeatureInt64(example *protobuf.Example, key string) int {
 		return 0
 	}
 
-	return int(val.Int64List.Value[0])
+	return val.Int64List.Value[0]
+}
+
+// ExampleFeatureInt64List is a helper function for decoding proto Int64 feature
+// from a TensorFlow Example. If key is not found it returns default value
+func ExampleFeatureInt64List(example *protobuf.Example, key string) []int64 {
+	// TODO: return error if key is not found?
+	f, ok := example.Features.Feature[key]
+	if !ok {
+		return nil
+	}
+
+	val, ok := f.Kind.(*protobuf.Feature_Int64List)
+	if !ok {
+		return nil
+	}
+
+	return val.Int64List.Value
 }
 
 // ExampleFeatureFloat is a helper function for decoding proto Float feature
@@ -144,6 +161,23 @@ func ExampleFeatureFloat(example *protobuf.Example, key string) float64 {
 	return float64(val.FloatList.Value[0])
 }
 
+// ExampleFeatureFloatList is a helper function for decoding proto Float feature
+// from a TensorFlow Example. If key is not found it returns default value
+func ExampleFeatureFloatList(example *protobuf.Example, key string) []float32 {
+	// TODO: return error if key is not found?
+	f, ok := example.Features.Feature[key]
+	if !ok {
+		return nil
+	}
+
+	val, ok := f.Kind.(*protobuf.Feature_FloatList)
+	if !ok {
+		return nil
+	}
+
+	return val.FloatList.Value
+}
+
 // ExampleFeatureBytes is a helper function for decoding proto Bytes feature
 // from a TensorFlow Example. If key is not found it returns default value
 func ExampleFeatureBytes(example *protobuf.Example, key string) []byte {
@@ -159,6 +193,23 @@ func ExampleFeatureBytes(example *protobuf.Example, key string) []byte {
 	}
 
 	return val.BytesList.Value[0]
+}
+
+// ExampleFeatureBytesList is a helper function for decoding proto Bytes feature
+// from a TensorFlow Example. If key is not found it returns default value
+func ExampleFeatureBytesList(example *protobuf.Example, key string) [][]byte {
+	// TODO: return error if key is not found?
+	f, ok := example.Features.Feature[key]
+	if !ok {
+		return nil
+	}
+
+	val, ok := f.Kind.(*protobuf.Feature_BytesList)
+	if !ok {
+		return nil
+	}
+
+	return val.BytesList.Value
 }
 
 // NewImage returns a new Image. r is the io.Reader for the raw image data, id
@@ -271,13 +322,13 @@ func (i *Image) MarshalCSV(baseDir string) []string {
 func (i *Image) UnmarshalExample(example *protobuf.Example) error {
 
 	// TODO make features optional? or configurable?
-	i.ID = ExampleFeatureInt64(example, "image/id")
-	i.Height = ExampleFeatureInt64(example, "image/height")
-	i.Width = ExampleFeatureInt64(example, "image/width")
-	i.LabelID = ExampleFeatureInt64(example, "image/class/label")
-	i.LabelRaw = ExampleFeatureInt64(example, "image/class/raw")
+	i.ID = int(ExampleFeatureInt64(example, "image/id"))
+	i.Height = int(ExampleFeatureInt64(example, "image/height"))
+	i.Width = int(ExampleFeatureInt64(example, "image/width"))
+	i.LabelID = int(ExampleFeatureInt64(example, "image/class/label"))
+	i.LabelRaw = int(ExampleFeatureInt64(example, "image/class/raw"))
 	i.LabelText = string(ExampleFeatureBytes(example, "image/class/text"))
-	i.SourceID = ExampleFeatureInt64(example, "image/class/source")
+	i.SourceID = int(ExampleFeatureInt64(example, "image/class/source"))
 	i.Filename = string(ExampleFeatureBytes(example, "image/filename"))
 	i.Raw = ExampleFeatureBytes(example, "image/encoded")
 	i.Format = string(ExampleFeatureBytes(example, "image/format"))

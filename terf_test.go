@@ -24,7 +24,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/ubccr/terf"
+	"github.com/markdicksonjr/terf"
 )
 
 func ExampleWriter() {

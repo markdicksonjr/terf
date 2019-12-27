@@ -25,7 +25,7 @@ import (
 	"io"
 
 	"github.com/golang/protobuf/proto"
-	protobuf "github.com/ubccr/terf/protobuf"
+	protobuf "github.com/markdicksonjr/terf/protobuf"
 )
 
 // Reader implements a reader for TFRecords with Example protos

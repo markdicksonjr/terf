@@ -28,8 +28,8 @@ import (
 	"path/filepath"
 	"runtime"
 
+	"github.com/markdicksonjr/terf"
 	log "github.com/sirupsen/logrus"
-	"github.com/ubccr/terf"
 	"golang.org/x/sync/errgroup"
 )
 
